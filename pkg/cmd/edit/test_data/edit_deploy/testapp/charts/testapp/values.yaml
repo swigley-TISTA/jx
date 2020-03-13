@@ -44,7 +44,7 @@ canary:
   host: acme.com
 
 service:
-  name: REPLACE_ME_APP_NAME
+  name: jx
   type: ClusterIP
   externalPort: 80
   internalPort: 8080

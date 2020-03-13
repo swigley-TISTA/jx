@@ -2,7 +2,7 @@ pipelines:
   release:
     setup:
       steps:
-        - groovy: git 'https://REPLACE_ME_GIT_PROVIDER/REPLACE_ME_ORG/REPLACE_ME_APP_NAME.git'
+        - groovy: git 'https://github.com/swigley-tista/jx.git'
           when: "prow"
         - sh: git checkout master
           comment: ensure we're not on a detached head

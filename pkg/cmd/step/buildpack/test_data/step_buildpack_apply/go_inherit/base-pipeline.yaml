@@ -1,7 +1,7 @@
 agent:
   label: jenkins-go
   container: go
-  dir: /home/jenkins/go/src/REPLACE_ME_GIT_PROVIDER/REPLACE_ME_ORG/REPLACE_ME_APP_NAME
+  dir: /home/jenkins/go/src/github.com/swigley-tista/jx
 pipelines:
   pullRequest:
     setup:
@@ -13,7 +13,7 @@ pipelines:
   release:
     setup:
       steps:
-      - groovy: git 'https://REPLACE_ME_GIT_PROVIDER/REPLACE_ME_ORG/REPLACE_ME_APP_NAME.git'
+      - groovy: git 'https://github.com/swigley-tista/jx.git'
         when: "prow"
       - groovy: checkout scm
         when: "!prow"

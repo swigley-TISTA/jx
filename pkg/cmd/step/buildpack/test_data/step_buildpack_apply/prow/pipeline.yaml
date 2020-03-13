@@ -32,7 +32,7 @@ pipelines:
       - sh: echo \$(jx-release-version) > VERSION
         comment: so we can retrieve the version in later steps
       - sh: mvn versions:set -DnewVersion=\$(cat VERSION)
-      - dir: ./charts/REPLACE_ME_APP_NAME
+      - dir: ./charts/jx
         steps:
         - sh: make tag
 
@@ -43,7 +43,7 @@ pipelines:
       - sh: jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)
     promote:
       steps:
-      - dir: ./charts/REPLACE_ME_APP_NAME
+      - dir: ./charts/jx
         steps:
         - sh: jx step changelog --version v\$(cat ../../VERSION)
         - comment: release the helm chart
