@@ -2,8 +2,9 @@ package create
 
 import (
 	"fmt"
-
+	"github.com/jenkins-x/jx/pkg/auth"
 	"github.com/jenkins-x/jx/pkg/cmd/create/options"
+	"gopkg.in/AlecAivazis/survey.v1"
 
 	"github.com/jenkins-x/jx/pkg/cmd/helper"
 
@@ -45,7 +46,7 @@ func NewCmdCreateTrackerServer(commonOpts *opts.CommonOptions) *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:     "server kind [url]",
+		Use:     "server kind [url] [username]",
 		Short:   "Creates a new issue tracker server URL",
 		Aliases: []string{"provider"},
 		Long:    createTrackerServer_long,
@@ -65,6 +66,7 @@ func NewCmdCreateTrackerServer(commonOpts *opts.CommonOptions) *cobra.Command {
 // Run implements the command
 func (o *CreateTrackerServerOptions) Run() error {
 	args := o.Args
+	trackerUser := ""
 	if len(args) < 1 {
 		return missingTrackerArguments()
 	}
@@ -94,6 +96,26 @@ func (o *CreateTrackerServerOptions) Run() error {
 	authConfigSvc, err := o.CreateIssueTrackerAuthConfigService(kind)
 	if err != nil {
 		return err
+	}
+	if len(args) > 2 && kind == "jira" {
+		trackerUser = args[2]
+		o.Username = trackerUser
+		trackerToken := ""
+		trackerToken, apiToken, bearerToken, password := "", "", "", ""
+
+		prompt := &survey.Input{
+			Message: "issue tracker API Token",
+			Default: "",
+			Help:    "API Authentication token for the issue tracker",
+		}
+		showPromptIfOptionNotSet(&trackerToken, prompt, o.In, o.Out, o.Err)
+		apiToken = trackerToken
+		password = trackerToken
+
+		o.OAUTHToken = trackerToken
+
+		authConfigSvc.SaveUserAuth(gitUrl, &auth.UserAuth{trackerUser, apiToken,bearerToken,password, ""} )
+		log.Logger().Infof("Added user %s for server %s with URL %s", trackerUser, util.ColorInfo(name), util.ColorInfo(gitUrl))
 	}
 	config := authConfigSvc.Config()
 	config.GetOrCreateServerName(gitUrl, name, kind)
