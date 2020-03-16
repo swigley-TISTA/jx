@@ -1165,7 +1165,7 @@ func replacePlaceholdersInDir(originalDir *string, args StepPlaceholderReplaceme
 	}
 	dir := *originalDir
 	// Replace the Go buildpack path with the correct location for Tekton builds.
-	dir = strings.Replace(dir, "/home/jenkins/go/src/REPLACE_ME_GIT_PROVIDER/REPLACE_ME_ORG/REPLACE_ME_APP_NAME", args.WorkspaceDir, -1)
+	dir = strings.Replace(dir, "/home/jenkins/go/src/github.com/swigley-tista/jx", args.WorkspaceDir, -1)
 
 	dir = strings.Replace(dir, util.PlaceHolderAppName, args.GitName, -1)
 	dir = strings.Replace(dir, util.PlaceHolderOrg, args.GitOrg, -1)

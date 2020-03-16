@@ -1,8 +1,8 @@
 pipeline {
   agent any
   environment {
-    ORG = 'REPLACE_ME_ORG'
-    APP_NAME = 'REPLACE_ME_APP_NAME'
+    ORG = 'swigley-tista'
+    APP_NAME = 'jx'
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
   }
   stages {
@@ -38,7 +38,7 @@ pipeline {
         // so we can retrieve the version in later steps
         sh "echo \$(jx-release-version) > VERSION"
         sh "mvn versions:set -DnewVersion=\$(cat VERSION)"
-        dir('./charts/REPLACE_ME_APP_NAME') {
+        dir('./charts/jx') {
           sh "make tag"
         }
         sh "mvn clean deploy"
@@ -51,7 +51,7 @@ pipeline {
         branch 'master'
       }
       steps {
-        dir('./charts/REPLACE_ME_APP_NAME') {
+        dir('./charts/jx') {
           sh "jx step changelog --version v\$(cat ../../VERSION)"
 
           // release the helm chart
